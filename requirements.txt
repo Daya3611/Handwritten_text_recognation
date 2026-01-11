@@ -1,0 +1,15 @@
+matplotlib
+numpy
+opencv-python
+path
+scikit-learn
+pytest
+tensorflow
+Pillow
+streamlit
+pyspellchecker
+transformers
+torch
+sentencepiece
+protobuf
+tf-keras

@@ -1,0 +1,52 @@
+# Handwritten Text Detection and Recognition Project Documentation
+
+## Project Overview
+This project implements a complete system to detect, segment, and recognize handwritten text from full-page images. It bridges classical Computer Vision techniques for segmentation with modern Deep Learning for character recognition.
+
+## 1. Project Workflow & Steps
+
+### Step 1: Image Preprocessing & Segmentation
+**Purpose:** To convert a raw full-page image into a set of individual, sorted word images that the AI model can process.
+**Method:** Scale Space Technique (based on R. Manmatha's research).
+**Key Actions:**
+- **Grayscale Conversion:** Simplifies the image data.
+- **Anisotropic Gaussian Filtering:** Blurs the image using a wide kernel (25x1) to merge characters within a word into a single "blob" while keeping separate words distinct.
+- **Thresholding (Otsu):** Converts the filtered image into a binary mask (black & white).
+- **Contour Detection:** Identifies the borders of the blobs (words).
+- **DBSCAN Clustering:** Groups the detected words into lines based on their vertical positions using `sklearn`. This ensures the text is read in the correct order (top-to-bottom, left-to-right).
+
+### Step 2: Text Recognition (OCR)
+**Purpose:** To "read" the content of the segmented word images.
+**Method:** Deep Learning - Convolutional Recurrent Neural Network (CRNN).
+**Architecture:**
+- **CNN Layers (Convolutional):** Extract visual features from the handwritten strokes.
+- **RNN Layers (Bidirectional LSTM):** Analyze the sequence of features. Since handwriting is sequential, LSTMs (Long Short-Term Memory) are used to understand context from both directions (left-to-right and right-to-left).
+- **CTC (Connectionist Temporal Classification):** The output layer. It decodes the neural network's predictions into text characters without needing each character to be perfectly aligned in the image.
+
+### Step 3: User Interface (GUI)
+**Purpose:** To allow users to easily test the system without writing code.
+**Method:** Web Application.
+**Actions:**
+- Created a `streamlit_app.py`.
+- Implemented file uploading for images (`.png`, `.jpg`).
+- Visualized the processing progress line-by-line.
+- Displayed the final transcribed text.
+
+## 2. Technologies & Libraries Used
+
+### Core Frameworks
+- **TensorFlow / Keras:** Used for loading the pre-trained Deep Learning model (`ocr_model_50_epoch.h5`) and performing inference.
+- **OpenCV (`cv2`):** Used for all image manipulation tasks: reading images, resizing, filtering, and finding contours.
+
+### Libraries
+- **NumPy:** Used for matrix operations, handling image arrays, and math calculations.
+- **Streamlit:** Used to build the dragging-and-dropping web interface.
+- **Scikit-learn (`sklearn`):** Used specifically for the `DBSCAN` clustering algorithm to sort text lines.
+- **Pickle:** Used to load the `characters` file, which contains the vocabulary (mapping of ID to Character) used by the model.
+
+### Key Solved Challenges (During Development)
+- **Model Compatibility:** We dealt with version mismatches between the training environment (older TensorFlow) and the running environment (newer TensorFlow).
+    - Fixed `StringLookup` imports.
+    - Created a `CustomLSTM` class to handle the deprecated `time_major` argument found in the saved model configuration.
+    - Used `@register_keras_serializable` to ensure the model loaded correctly in the new environment.
+- **NumPy Compatibility:** Updated deprecated functions (like `np.math.pi` to `np.pi`) to work with NumPy 2.0+.
