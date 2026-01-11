@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from word_detector import detect, prepare_img, sort_multiline
 from transformers import pipeline
 
-# Set page config
+# Set page confixg
 st.set_page_config(page_title="Handwritten Text Recognition", layout="wide")
 
 # Constants
