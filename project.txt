@@ -3,7 +3,7 @@
 ## Project Overview
 This project implements a complete system to detect, segment, and recognize handwritten text from full-page images. It bridges classical Computer Vision techniques for segmentation with modern Deep Learning for character recognition.
 
-## 1. Project Workflow & Steps
+## 1. Project Workflow & Steps1
 
 ### Step 1: Image Preprocessing & Segmentation
 **Purpose:** To convert a raw full-page image into a set of individual, sorted word images that the AI model can process.
